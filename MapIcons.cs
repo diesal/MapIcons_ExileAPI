@@ -189,12 +189,12 @@ public class MapIcons : BaseSettingsPlugin<MapIconsSettings>
         ImGui.Text("Volatile Core");
 
         // fracturing mirrors
-        ImGuiUtils.Checkbox("##FracturingMirrors", "Draw Fracturing Mirrors", ref Settings.FracturingMirror_Draw); ImGui.SameLine();
-        ImGuiUtils.ColorSwatch("Icon Tint ##FracturingMirrors", ref Settings.FracturingMirror_Tint); ImGui.SameLine();
-        ImGuiUtils.ColorSwatch("Hidden Icon Tint ##FracturingMirrors", ref Settings.FracturingMirror_HiddenTint); ImGui.SameLine();
-        IconButton("Fracturing Mirror Icon", "Icon", ref Settings.FracturingMirror_Index, Settings.FracturingMirror_Tint); ImGui.SameLine();
-        IconSizeSliderInt("##FracturingMirrors", ref Settings.FracturingMirror_Size, 0, 32); ImGui.SameLine();
-        ImGui.Text("Fracturing Mirror");
+        //ImGuiUtils.Checkbox("##FracturingMirrors", "Draw Fracturing Mirrors", ref Settings.FracturingMirror_Draw); ImGui.SameLine();
+        //ImGuiUtils.ColorSwatch("Icon Tint ##FracturingMirrors", ref Settings.FracturingMirror_Tint); ImGui.SameLine();
+        //ImGuiUtils.ColorSwatch("Hidden Icon Tint ##FracturingMirrors", ref Settings.FracturingMirror_HiddenTint); ImGui.SameLine();
+        //IconButton("Fracturing Mirror Icon", "Icon", ref Settings.FracturingMirror_Index, Settings.FracturingMirror_Tint); ImGui.SameLine();
+        //IconSizeSliderInt("##FracturingMirrors", ref Settings.FracturingMirror_Size, 0, 32); ImGui.SameLine();
+        //ImGui.Text("Fracturing Mirror");
 
         // minions
         ImGuiUtils.Checkbox("##Minions", "Draw Minions", ref Settings.Minion_Draw); ImGui.SameLine();
@@ -214,6 +214,30 @@ public class MapIcons : BaseSettingsPlugin<MapIconsSettings>
         ImGui.Text("NPC");
 
     }
+
+    private void DrawDeliriumIconSettings() {
+
+        ImGuiUtils.Checkbox("##BloodBag", "Draw BloodBags", ref Settings.BloodBag_Draw); ImGui.SameLine();
+        ImGuiUtils.ColorSwatch("Icon Tint ##BloodBag", ref Settings.BloodBag_Tint); ImGui.SameLine();
+        IconButton("BloodBag Icon", "Icon", ref Settings.BloodBag_Index, Settings.BloodBag_Tint); ImGui.SameLine();
+        IconSizeSliderInt("##BloodBag", ref Settings.BloodBag_Size, 0, 32); ImGui.SameLine();
+        ImGui.Text("BloodBag");
+
+        ImGuiUtils.Checkbox("##EggFodder", "Draw EggFodder", ref Settings.EggFodder_Draw); ImGui.SameLine();
+        ImGuiUtils.ColorSwatch("Icon Tint ##EggFodder", ref Settings.EggFodder_Tint); ImGui.SameLine();
+        IconButton("EggFodder Icon", "Icon", ref Settings.EggFodder_Index, Settings.EggFodder_Tint); ImGui.SameLine();
+        IconSizeSliderInt("##EggFodder", ref Settings.EggFodder_Size, 0, 32); ImGui.SameLine();
+        ImGui.Text("EggFodder");
+
+        ImGuiUtils.Checkbox("##GlobSpawn", "Draw GlobSpawn", ref Settings.GlobSpawn_Draw); ImGui.SameLine();
+        ImGuiUtils.ColorSwatch("Icon Tint ##GlobSpawn", ref Settings.GlobSpawn_Tint); ImGui.SameLine();
+        IconButton("GlobSpawn Icon", "Icon", ref Settings.GlobSpawn_Index, Settings.GlobSpawn_Tint); ImGui.SameLine();
+        IconSizeSliderInt("##GlobSpawn", ref Settings.GlobSpawn_Size, 0, 32); ImGui.SameLine();
+        ImGui.Text("GlobSpawn");
+
+
+    }
+
     private void DrawMiscIconSettings() {
 
         ImGuiUtils.Checkbox("##Players", "Draw Local Player", ref Settings.LocalPlayer_Draw); ImGui.SameLine();
@@ -488,6 +512,11 @@ public class MapIcons : BaseSettingsPlugin<MapIconsSettings>
         if (ImGuiUtils.CollapsingHeader("NPC Icons", ref Settings.NPCIconsOpen)) {
             ImGui.Indent();
             DrawNpcIconSettings();
+            ImGui.Unindent();
+        };
+        if (ImGuiUtils.CollapsingHeader("Delirium Icons", ref Settings.DeliriumIconsOpen)) {
+            ImGui.Indent();
+            DrawDeliriumIconSettings();
             ImGui.Unindent();
         };
         if (ImGuiUtils.CollapsingHeader("Misc Icons", ref Settings.MiscIconsOpen)) {

@@ -22,6 +22,7 @@ public enum IconCategories {
     IngameIcon,
     Misc,
     Custom,
+    Delirium,
 }
 public enum IconTypes
 {
@@ -76,6 +77,9 @@ public enum IconTypes
     OperativeStrongbox,
     ArcaneStrongbox,
     ResearcherStrongbox,
+    BloodBag,
+    EggFodder,
+    GlobSpawn,
 }
 
 

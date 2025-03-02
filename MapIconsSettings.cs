@@ -35,6 +35,7 @@ public sealed class MapIconsSettings : ISettings {
     public bool DrawSetingsOpen = true;
     public bool IgnoredEntitesOpen = false;
     public bool CustomIconsOpen = true;
+    public bool DeliriumIconsOpen = true;
     public bool NPCIconsOpen = true;
     public bool MiscIconsOpen = true;
     public bool ChestIconsOpen = true;
@@ -173,11 +174,34 @@ public sealed class MapIconsSettings : ISettings {
         public bool VolatileCore_Draw = true;
         public bool VolatileCore_DrawText = false;
         public int VolatileCore_Size = 32;
-        public int VolatileCore_Index = 18;
-        public Vector4 VolatileCore_Tint = new Vector4(1.0f, 0.0f, 0.38961077f, 1.0f);
-        public Vector4 VolatileCore_HiddenTint = new Vector4(1.0f, 0.6862745f, 0.8043829f, 1.0f);
+        public int VolatileCore_Index = 50;
+        public Vector4 VolatileCore_Tint = new Vector4(1.0f, 0.0f, 0.73362494f, 1.0f);
+        public Vector4 VolatileCore_HiddenTint = new Vector4(1.0f, 0.6862745f, 0.9493108f, 1.0f);
 
     #endregion
+
+
+    //Delirium Icons
+    public bool BloodBag_Draw = true;
+    public bool BloodBag_DrawText = false;
+    public int BloodBag_Size = 32;
+    public int BloodBag_Index = 161;
+    public Vector4 BloodBag_Tint = new Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+    public Vector4 BloodBag_HiddenTint = new Vector4(1.0f, 0.6862745f, 0.6862745f, 1.0f);
+
+    public bool EggFodder_Draw = true;
+    public bool EggFodder_DrawText = false;
+    public int EggFodder_Size = 32;
+    public int EggFodder_Index = 161;
+    public Vector4 EggFodder_Tint = new Vector4(0.0f, 0.9411765f, 1.0f, 1.0f);
+    public Vector4 EggFodder_HiddenTint = new Vector4(1.0f, 0.6862745f, 0.6862745f, 1.0f);
+
+    public bool GlobSpawn_Draw = true;
+    public bool GlobSpawn_DrawText = false;
+    public int GlobSpawn_Size = 32;
+    public int GlobSpawn_Index = 161;
+    public Vector4 GlobSpawn_Tint = new Vector4(0.0f, 0.9411765f, 1.0f, 1.0f);
+    public Vector4 GlobSpawn_HiddenTint = new Vector4(1.0f, 0.6862745f, 0.6862745f, 1.0f);
 
     // misc icons
     public bool LocalPlayer_Draw = false;

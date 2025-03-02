@@ -10,6 +10,7 @@ using System;
 using Color = System.Drawing.Color;
 using static System.Net.Mime.MediaTypeNames;
 using ExileCore.Shared.Cache;
+using System.Diagnostics;
 
 namespace MapIcons;
 
@@ -356,6 +357,55 @@ public sealed class IconBuilder
         DebugChestIcon(icon);
         return icon;
     }
+    private MapIcon CreateDeliriumIcon(Entity entity) {
+        var icon = new MapIcon(entity);
+        icon.IconRenderType = IconRenderTypes.Monster;
+        icon.IconCategory = IconCategories.Delirium;
+        icon.Text = icon.RenderName;
+        icon.Show = () => entity.IsAlive;
+
+        var pathstring = "Metadata/Monsters/LeagueAffliction/DoodadDaemons/DoodadDaemon";
+
+        if (entity.Path.StartsWith(pathstring + "BloodBag", StringComparison.Ordinal)) {
+            icon.IconType = IconTypes.BloodBag;
+            icon.UpdateSettingsAction = () => {
+                icon.Draw = Settings.BloodBag_Draw;
+                icon.DrawText = Settings.BloodBag_DrawText;
+                icon.Size = Settings.BloodBag_Size;
+                icon.Index = Settings.BloodBag_Index;
+                icon.Tint = Settings.BloodBag_Tint;
+                icon.HiddenTint = Settings.BloodBag_HiddenTint;
+            };
+        }
+        else if (entity.Path.StartsWith(pathstring + "EggFodder", StringComparison.Ordinal)) {
+            icon.IconType = IconTypes.EggFodder;
+            icon.UpdateSettingsAction = () => {
+                icon.Draw = Settings.EggFodder_Draw;
+                icon.DrawText = Settings.EggFodder_DrawText;
+                icon.Size = Settings.EggFodder_Size;
+                icon.Index = Settings.EggFodder_Index;
+                icon.Tint = Settings.EggFodder_Tint;
+                icon.HiddenTint = Settings.EggFodder_HiddenTint;
+            };
+        }
+        else if (entity.Path.StartsWith(pathstring + "GlobSpawn", StringComparison.Ordinal)) {
+            icon.IconType = IconTypes.GlobSpawn;
+            icon.UpdateSettingsAction = () => {
+                icon.Draw = Settings.GlobSpawn_Draw;
+                icon.DrawText = Settings.GlobSpawn_DrawText;
+                icon.Size = Settings.GlobSpawn_Size;
+                icon.Index = Settings.GlobSpawn_Index;
+                icon.Tint = Settings.GlobSpawn_Tint;
+                icon.HiddenTint = Settings.GlobSpawn_HiddenTint;
+            };
+        }
+        else return null;
+
+        icon.Hidden = () => false;
+
+        DebugNPCIcon(icon);
+        return icon;
+    }
     private MapIcon CreateNPCIcon(Entity entity) {
         var icon = new MapIcon(entity);
         icon.IconRenderType = IconRenderTypes.Monster;
@@ -379,25 +429,24 @@ public sealed class IconBuilder
                 icon.HiddenTint = Settings.NPC_HiddenTint;
             };
         }
-        // Delirium
-        else if (entity.Path.StartsWith("Metadata/Monsters/LeagueDelirium/DoodadDaemons", StringComparison.Ordinal)) {
-            if (entity.Path.Contains("ShardPack", StringComparison.OrdinalIgnoreCase)) {
-                icon.Priority = IconPriority.Medium;
-                icon.Hidden = () => false;
-                icon.IconType = IconTypes.FracturingMirror;
-                icon.UpdateSettingsAction = () => {
-                    icon.Draw = Settings.FracturingMirror_Draw;
-                    icon.DrawText = Settings.FracturingMirror_DrawText;
-                    icon.Size = Settings.FracturingMirror_Size;
-                    icon.Index = Settings.FracturingMirror_Index;
-                    icon.Tint = Settings.FracturingMirror_Tint;
-                    icon.HiddenTint = Settings.FracturingMirror_HiddenTint;
-                };
-            }
-            else return null;
-        }
+        //else if (entity.Path.StartsWith("Metadata/Monsters/LeagueDelirium/DoodadDaemons", StringComparison.Ordinal)) {
+        //    if (entity.Path.Contains("ShardPack", StringComparison.OrdinalIgnoreCase)) {
+        //        icon.Priority = IconPriority.Medium;
+        //        icon.Hidden = () => false;
+        //        icon.IconType = IconTypes.FracturingMirror;
+        //        icon.UpdateSettingsAction = () => {
+        //            icon.Draw = Settings.FracturingMirror_Draw;
+        //            icon.DrawText = Settings.FracturingMirror_DrawText;
+        //            icon.Size = Settings.FracturingMirror_Size;
+        //            icon.Index = Settings.FracturingMirror_Index;
+        //            icon.Tint = Settings.FracturingMirror_Tint;
+        //            icon.HiddenTint = Settings.FracturingMirror_HiddenTint;
+        //        };
+        //    }
+        //    else return null;
+        //}
         //Volatile Core
-        else if (entity.Path.Contains("Metadata/Monsters/LeagueDelirium/Volatile")) {
+        else if (entity.Path.Contains("Metadata/Monsters/LeagueAffliction/Volatile")) {
             icon.Priority = IconPriority.Medium;
             icon.IconType = IconTypes.VolatileCore;
             icon.UpdateSettingsAction = () => {
@@ -408,6 +457,7 @@ public sealed class IconBuilder
                 icon.Tint = Settings.VolatileCore_Tint;
                 icon.HiddenTint = Settings.VolatileCore_HiddenTint;
             };
+            icon.Hidden = () => false;
         }
         // Minion
         else if (!entity.IsHostile) {
@@ -442,7 +492,7 @@ public sealed class IconBuilder
                 if (statDictionary == null) {
                     icon.Show = () => entity.GetComponent<Life>().HPPercentage > 0.02;
                 }
-                else if(statDictionary.Count == 0) {
+                else if (statDictionary.Count == 0) {
                     statDictionary = entity.GetComponentFromMemory<Stats>()?.StatDictionary ?? statDictionary;
                     if (statDictionary.Count == 0) icon.Text = "Error";
                 }
@@ -683,6 +733,10 @@ public sealed class IconBuilder
         }
         // Ingame Icon
         if (entity.HasComponent<MinimapIcon>()) return CreateIngameIcon(entity);
+        // Delirium Icon
+        if (entity.Path.StartsWith("Metadata/Monsters/LeagueAffliction/DoodadDaemons", StringComparison.Ordinal)) {
+            return CreateDeliriumIcon(entity);
+        }
         // NPC
         if (entity.Type == EntityType.Monster || entity.Type == EntityType.Npc) {
             if (!entity.IsAlive) return null;
