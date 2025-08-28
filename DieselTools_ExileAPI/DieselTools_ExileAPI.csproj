@@ -14,6 +14,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="Controls\ColorSelect.cs" />
+  </ItemGroup>
+
   <!-- References to ExileApi-bundled DLLs for plugin compatibility and version safety -->
   <ItemGroup>
     <Reference Include="ExileCore">

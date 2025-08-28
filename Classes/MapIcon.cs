@@ -20,7 +20,7 @@ public class MapIcon
     public Func<bool> Hidden { get; set; } = () => false;
     public HudTexture InGameTexture { get; set; }
     public string RenderName => Entity.RenderName;
-    public string Text { get; set; }
+    public string Name { get; set; }
     public MapIconRenderers Renderer { get; set; } = MapIconRenderers.Default;
     public MapIconTypes Type { get; set; }
     public MapIconSettings Settings { get; set; }

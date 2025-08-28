@@ -105,6 +105,7 @@ public enum TreeIconConfigs
     IngameIcon,
     Monster,
     Chest,
+    Friendly
 }
 
 public enum IconDrawStates

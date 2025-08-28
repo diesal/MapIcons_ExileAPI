@@ -15,9 +15,9 @@ public static class InputSpinner {
         public float Max { get; set; } = 100f;
         public float Step { get; set; } = 1f;
         public float? ShiftStep { get; set; } 
-        public uint BackgroundColor { get; set; } = Colors.ControlInput;
+        public uint BackgroundColor { get; set; } = Colors.Input;
         public uint BorderColor { get; set; } = Colors.Black;
-        public uint OuterBorderColor { get; set; } = Colors.ControlOuterBorder;
+        public uint OuterBorderColor { get; set; } = Colors.ControlOuterGlow;
         public Tooltip.Options? Tooltip { get; set; } = null;
         public ImGuiInputTextFlags InputTextFlags { get; set; } = ImGuiInputTextFlags.None;
 

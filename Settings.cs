@@ -1,17 +1,17 @@
 ﻿
-using ExileCore;
 using ExileCore.Shared.Nodes;
 using ExileCore.Shared.Interfaces;
-using System.Numerics;
-using SixLabors.ImageSharp.Processing;
 using SharpDX;
+using DieselTools_ExileAPI;
 
 namespace MapIcons;
 
 public class MapIconSettings {
 
     public bool Draw = true;
-    public bool DrawText = false;
+    public bool DrawName = false;
+    public bool DrawHealth = false;
+    public bool AnimateLife = false;
     public int Size = 32;
     public int Index = 0;
     public Color Tint = new Color(255, 255, 255, 255);         // White, fully opaque
@@ -43,6 +43,7 @@ public sealed class Settings : ISettings {
     public bool CustomIconsOpen = true;
 
     //debug
+    public DBuggerSettings DBuggerSettings { get; set; } = new DBuggerSettings();
     public bool Debug = false;
     public bool DebugMiscIcon = false;
     public bool DebugMinimapIcon = false;

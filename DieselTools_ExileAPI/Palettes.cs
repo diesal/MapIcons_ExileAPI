@@ -17,6 +17,25 @@ public static class Palettes {
         public uint Value { get; set; }  
     }
 
+    public static uint GetMaterialColor(string swatchName, int alpha = 255) {
+        if (string.IsNullOrWhiteSpace(swatchName))
+            throw new ArgumentException("Swatch name must be non-empty.");
+
+        if (alpha < 0 || alpha > 255)
+            throw new ArgumentOutOfRangeException(nameof(alpha), "Alpha must be between 0 and 255.");
+
+        foreach (var palette in Material.Values) {
+            var swatch = palette.FirstOrDefault(s => s.Name.Equals(swatchName, StringComparison.OrdinalIgnoreCase));
+            if (swatch != null) {
+                if (alpha == 255)
+                    return swatch.Value;
+                // Compose color with custom alpha
+                return ColorTools.RGBA2Uint((byte)swatch.Red, (byte)swatch.Green, (byte)swatch.Blue, (byte)alpha);
+            }
+        }
+
+        throw new KeyNotFoundException($"Swatch '{swatchName}' not found in any palette.");
+    }
     public static readonly Dictionary<string, List<Swatch>> Material = new() {
         { "Red", new List<Swatch> {
             new() { Name = "Red 50",   Red = 255, Green = 235, Blue = 238, Value = ColorTools.RGBA2Uint(255, 235, 238) },

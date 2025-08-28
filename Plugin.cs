@@ -3,15 +3,18 @@ using ExileCore.Shared.Cache;
 using ImGuiNET;
 using System.Drawing;
 using System.Numerics;
+using DT = DieselTools_ExileAPI;
+using DBugger = DieselTools_ExileAPI.DBugger;
+using DieselTools_ExileAPI;
 
 namespace MapIcons;
 
 public class Plugin : BaseSettingsPlugin<Settings>
 {
-    //--| Classes |--------------------------------------------------------------------------------------------------
-    private IconAtlas _iconAtlas;
-    public IconAtlas IconAtlas => _iconAtlas ??= new IconAtlas(Graphics, "MapIcons", Path.Combine(Path.GetDirectoryName(typeof(MapIcon).Assembly.Location), "media", "MapIcons.png"), new Vector2(32, 32));
-    //--| Modules |--------------------------------------------------------------------------------------------------
+    //--| Properties |---------------------------------------------------------------------------------------------------
+    private DT.IconAtlas _iconAtlas;
+    public DT.IconAtlas IconAtlas => _iconAtlas ??= new(Graphics, "Diesel_MapIcons", Path.Combine(Path.GetDirectoryName(typeof(MapIcon).Assembly.Location), "media", "MapIcons.png"), new Vector2(32, 32));
+    
     private IconBuilder _iconBuilder;       
     public IconBuilder IconBuilder => _iconBuilder ??= new IconBuilder(this);
 
@@ -21,42 +24,20 @@ public class Plugin : BaseSettingsPlugin<Settings>
     private UserInterface _userInterface;
     private UserInterface UserInterface => _userInterface ??= new UserInterface(this);
 
-    //--| fields |--------------------------------------------------------------------------------------------------
-    public CachedValue<List<MapIcon>> IconListCache;
-    private TimeCache<List<MapIcon>> CreateIconListCache() {
-        return new TimeCache<List<MapIcon>>(() => {
-            var entitySource = Settings.DrawCachedEntities
-                ? GameController?.EntityListWrapper.Entities
-                : GameController?.EntityListWrapper?.OnlyValidEntities;
-            var baseIcons = entitySource?.Select(x => x.GetHudComponent<MapIcon>())
-                .Where(icon => icon != null)
-                .OrderBy(x => x.Priority)
-                .ToList();
-            return baseIcons ?? [];
-        }, Settings.IconListUpdatePeriod);
-    }
-
-
-
-
     //--| Initialise |--------------------------------------------------------------------------------------------------
     public override bool Initialise() {
         CanUseMultiThreading = true;
-
-        Log.SetCustomHeaderControls(CustomHeaderControls);
+        InitializeDBugger();
 
         IconBuilder.Initialise();
-        Graphics.InitImage("Icons.png");
-
-        IconListCache = CreateIconListCache();
+        IconRenderer.Initialise();
 
         return base.Initialise();
     }
+
     //--| Draw Settings |-----------------------------------------------------------------------------------------------
     public override void DrawSettings() {
-
         UserInterface.Draw();
-
     }
 
     //--| Tick |-------------------------------------------------------------------------------------------------------
@@ -65,22 +46,45 @@ public class Plugin : BaseSettingsPlugin<Settings>
 
         return null;
     }
+
     //--| Render |-----------------------------------------------------------------------------------------------------
     public override void Render() {
-        Log.Render(ref Settings.Debug);
-
-        IconRenderer.Render();      
+        IconRenderer.Render();  
+        DBugger.Render();
     }
-    //--| Misc |-------------------------------------------------------------------------------------------------------
-    private void CustomHeaderControls() {
-        ImGui.SameLine();
-        ImGui.Checkbox("Friendly", ref Settings.DebugFriendlyIcon); ImGui.SameLine();
-        ImGui.Checkbox("Monster", ref Settings.DebugMonsterIcon); ImGui.SameLine();
-        ImGui.Checkbox("Chest", ref Settings.DebugChestIcon); ImGui.SameLine();
-        ImGui.Checkbox("Ingame", ref Settings.DebugMinimapIcon); ImGui.SameLine();
-        ImGui.Checkbox("Misc", ref Settings.DebugMiscIcon); ImGui.SameLine();
-        ImGui.Checkbox("User", ref Settings.DebugUser); ImGui.SameLine();
-        if (ImGui.Button("Rebuild Icons")) IconBuilder.RebuildIcons();
+
+    //--| DBugger |-------------------------------------------------------------------------------------------------------
+    private void InitializeDBugger() {
+        DBugger.PluginName = Name;
+        DBugger.Settings = Settings.DBuggerSettings;
+        DBugger.ToolbarOptions = new DT.FloatingToolbar.Options {
+            Tools = new List<DT.FloatingToolbar.Tool>{
+                    new DT.FloatingToolbar.Label { Text = "MapIcons DBugger" },
+                    new DT.FloatingToolbar.Button {
+                        Label = "LOG",
+                        SetChecked = (bool state) => { Settings.DBuggerSettings.ShowLog = state; },
+                        GetChecked = () => Settings.DBuggerSettings.ShowLog,
+                    },
+                    new DT.FloatingToolbar.Button {
+                        Label = "Monitor",
+                        SetChecked = (bool state) => { Settings.DBuggerSettings.ShowMonitor = state; },
+                        GetChecked = () => Settings.DBuggerSettings.ShowMonitor,
+                    },
+
+            },
+        };
+        DBugger.LogHeader = (width, height) => {
+            DT.Button.Draw($"{Name}Friendly", ref Settings.DebugFriendlyIcon, new DT.Button.Options { Label = "Friendly", Width = 80, Height = 22 }); ImGui.SameLine();
+            DT.Button.Draw($"{Name}Monster", ref Settings.DebugMonsterIcon, new DT.Button.Options { Label = "Monster", Width = 80, Height = 22 }); ImGui.SameLine();
+            DT.Button.Draw($"{Name}Chest", ref Settings.DebugChestIcon, new DT.Button.Options { Label = "Chest", Width = 80, Height = 22 }); ImGui.SameLine();
+            DT.Button.Draw($"{Name}Ingame", ref Settings.DebugMinimapIcon, new DT.Button.Options { Label = "Ingame", Width = 80, Height = 22 }); ImGui.SameLine();
+            DT.Button.Draw($"{Name}Misc", ref Settings.DebugMiscIcon, new DT.Button.Options { Label = "Misc", Width = 80, Height = 22 }); ImGui.SameLine();
+            DT.Button.Draw($"{Name}User", ref Settings.DebugUser, new DT.Button.Options { Label = "User", Width = 80, Height = 22 }); ImGui.SameLine();
+            if (DT.Button.Draw($"{Name}RebuildIcons", new DT.Button.Options { Label = "Rebuild", Width = 80, Height = 22, Tooltip = Tooltip.BasicOptions("Rebuild Icons") })) {
+                IconBuilder.RebuildIcons();
+            }
+        };
+        DBugger.Log($"DBugger for {Name} initialized", false);
     }
 
 }

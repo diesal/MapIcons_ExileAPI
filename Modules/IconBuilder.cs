@@ -6,6 +6,7 @@ using ExileCore.Shared.Helpers;
 using ExileCore.Shared.Interfaces;
 using SharpDX;
 using System.Drawing;
+using DBugger = DieselTools_ExileAPI.DBugger;
 
 namespace MapIcons;
 
@@ -104,8 +105,8 @@ public sealed class IconBuilder : PluginModule {
     }
 
     private void DebugIcon(MapIcon icon) {
-        if (!Settings.Debug) return;
-        Log.Write($"--| Type: {icon.Type} | Renderer: {icon.Renderer} | Entity.Type: {icon.Entity.Type} | RenderName: {icon.Entity.RenderName} | Path: {icon.Entity.Path}");
+        if (!Settings.DBuggerSettings.ShowLog) return;
+        DBugger.Log($"--| Type: {icon.Type} | Renderer: {icon.Renderer} | Entity.Type: {icon.Entity.Type} | RenderName: {icon.Entity.RenderName} | Path: {icon.Entity.Path}");
     }
     private void DebugIngameIcon(MapIcon icon) {
         if (Settings.DebugMinimapIcon) DebugIcon(icon);
@@ -176,7 +177,7 @@ public sealed class IconBuilder : PluginModule {
     private MapIcon CreateIcon_Chest(Entity entity) {
         var icon = new MapIcon(entity);
         icon.Renderer = MapIconRenderers.Chest;
-        icon.Text = icon.RenderName;
+        icon.Name = icon.RenderName;
         icon.Show = () => !entity.IsOpened;
 
         // Breakables
@@ -248,7 +249,7 @@ public sealed class IconBuilder : PluginModule {
     private MapIcon CreateIcon_Delirium(Entity entity) {
         var icon = new MapIcon(entity);
         icon.Renderer = MapIconRenderers.Monster;
-        icon.Text = icon.RenderName;
+        icon.Name = icon.RenderName;
         icon.Show = () => entity.IsAlive;
 
         var pathstring = "Metadata/Monsters/LeagueAffliction/DoodadDaemons/DoodadDaemon";
@@ -271,7 +272,7 @@ public sealed class IconBuilder : PluginModule {
     }
     private MapIcon CreateIcon_LabyrinthTrap(Entity entity) {
         var icon = new MapIcon(entity);
-        icon.Text = icon.RenderName;
+        icon.Name = icon.RenderName;
         icon.Renderer = MapIconRenderers.Monster;
         // Roomba
         if (entity.Path.Contains("LabyrinthRoomba") || entity.Path.Contains("LabyrinthFlyingRoomba")) {
@@ -316,7 +317,7 @@ public sealed class IconBuilder : PluginModule {
 
         var icon = new MapIcon(entity);
         icon.Renderer = MapIconRenderers.Friendly;
-        icon.Text = icon.RenderName;
+        icon.Name = icon.RenderName;
         icon.Show = () => entity.IsAlive;
 
         // NPC
@@ -324,7 +325,7 @@ public sealed class IconBuilder : PluginModule {
             if (!entity.HasComponent<Render>()) return null;
             var component = entity.GetComponent<Render>();
             icon.Type = MapIconTypes.NPC;
-            icon.Text = component?.Name.Split(',')[0];
+            icon.Name = component?.Name.Split(',')[0];
             icon.Show = () => entity.IsValid;
         }
         // Totem
@@ -345,7 +346,7 @@ public sealed class IconBuilder : PluginModule {
 
         var icon = new MapIcon(entity);
         icon.Renderer = MapIconRenderers.Monster;
-        icon.Text = icon.RenderName;
+        icon.Name = icon.RenderName;
         icon.Show = () => entity.IsAlive;
 
         // Volatile Core
@@ -391,7 +392,7 @@ public sealed class IconBuilder : PluginModule {
                 else if (statDictionary.Count == 0) {
                     statDictionary = entity.GetComponentFromMemory<Stats>()?.StatDictionary ?? statDictionary;
                     if (statDictionary.Count == 0)
-                        icon.Text = "Error";
+                        icon.Name = "Error";
                 }
                 else
                     icon.Show = () => !icon.Hidden() && entity.GetComponent<Life>()?.HPPercentage > 0.02;
@@ -468,7 +469,7 @@ public sealed class IconBuilder : PluginModule {
     private MapIcon CreateIcon_Ingame(Entity entity) {
         var icon = new MapIcon(entity);
         icon.Renderer = MapIconRenderers.IngameIcon;
-        icon.Text = icon.RenderName;
+        icon.Name = icon.RenderName;
 
         var minimapIconComponent = entity.GetComponent<MinimapIcon>();
         if (minimapIconComponent == null || minimapIconComponent.IsHide) return null;
@@ -546,7 +547,7 @@ public sealed class IconBuilder : PluginModule {
             var icon = new MapIcon(entity);
             icon.Settings = customPathIconSettings;
             icon.Type = MapIconTypes.CustomPath;
-            icon.Text = entity.RenderName;
+            icon.Name = entity.RenderName;
             icon.Show = () => true;
             DebugCustomIcon(icon);
             return icon;
@@ -600,9 +601,10 @@ public sealed class IconBuilder : PluginModule {
         if (entity.Type == EntityType.Player) {
             if (!entity.IsValid) return null;
             var icon = new MapIcon(entity);
-            icon.Text = icon.RenderName;
+            icon.Renderer = MapIconRenderers.Friendly;
+            icon.Name = icon.RenderName;
 
-            icon.Text = entity.GetComponent<Player>().PlayerName;
+            icon.Name = entity.GetComponent<Player>().PlayerName;
             // Local Player
             if (GameController.IngameState.Data.LocalPlayer.Address == entity.Address) {
                 icon.Type = MapIconTypes.LocalPlayer;

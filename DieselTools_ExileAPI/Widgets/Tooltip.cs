@@ -18,6 +18,7 @@ public static class Tooltip {
         public uint BorderColor { get; set; } = ColorTools.RGBA2Uint(0, 0, 0, 255);
         public SVector2 Offset { get; set; } = new(10, 10); // Position relative to mouse cursor
         public SVector2 Size { get; set; } = new(260, 120);
+        /// <summary> X=Top, Y=Right, Z=Bottom, W=Left, Default:(5, 5, 5, 5) </summary>
         public SVector4 Padding { get; set; } = new(5, 5, 5, 5);
         public bool FitContent { get; set; } = true; // If true, size will be adjusted to fit content
     }
@@ -41,7 +42,8 @@ public static class Tooltip {
     }
     public class Separator : Line
     {
-        public SVector2 Padding { get; set; } = new SVector2(5, 5); // Padding around the separator
+        /// <summary> X=Top, Y=Right, Z=Bottom, W=Left, Default:(6, -2, 4, -2) </summary>
+        public SVector4 Padding { get; set; } = new SVector4(6, -2, 4, -2);
         public float Thickness { get; set; } = 1.0f;
         public uint Color { get; set; } = DefaultSeparatorColor;
 
@@ -119,7 +121,7 @@ public static class Tooltip {
                         break;
                     case Separator sep:
                         // Add top padding, thickness, and bottom padding
-                        totalHeight += sep.Padding.X + sep.Thickness + sep.Padding.Y;
+                        totalHeight += sep.Padding.X + sep.Thickness + sep.Padding.Z;
                         break;
                 }
             }
@@ -164,14 +166,20 @@ public static class Tooltip {
                     break;
                 case Separator sep:
                     // Top padding
-                    textPos.Y += sep.Padding.X;
+                    textPos.Y += sep.Padding.X; // Top
                     // Draw the horizontal separator line
-                    var lineY = MathF.Round(textPos.Y); // Use integer Y
-                    var lineStart = new SVector2(pos.X + options.Padding.X, lineY);
-                    var lineEnd = new SVector2(pos.X + size.X - options.Padding.Z, lineY);
+                    var lineY = MathF.Round(textPos.Y);
+                    var lineStart = new SVector2(
+                        pos.X + options.Padding.W + sep.Padding.W, // Left
+                        lineY
+                    );
+                    var lineEnd = new SVector2(
+                        pos.X + size.X - options.Padding.Y - sep.Padding.Y, // Right
+                        lineY
+                    );
                     drawList.AddLine(lineStart, lineEnd, sep.Color, sep.Thickness);
                     // Move textPos.Y down by thickness and bottom padding
-                    textPos.Y += sep.Thickness + sep.Padding.Y;
+                    textPos.Y += sep.Thickness + sep.Padding.Z; // Bottom
                     break;
             }
         }

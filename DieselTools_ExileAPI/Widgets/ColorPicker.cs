@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using SVector2 = System.Numerics.Vector2;
 using SVector4 = System.Numerics.Vector4;
@@ -7,62 +8,35 @@ namespace DieselTools_ExileAPI;
 
 public static class ColorPicker {
     private const int ControlHeight = 20;
+    private const int PopupPaddingBottom = 3;
+    private static readonly SVector2 PickerWindowSize = new SVector2(441, 197);
     private static readonly SVector2 ContentPadding = new SVector2(10, 10);
     private static readonly SVector2 ControlSpacing = new SVector2(8, 8);
     private static readonly SVector2 InputSpacing = new SVector2(5, 5);
     private static readonly SVector2 SliderSize = new(362,ControlHeight);
     private static readonly SVector2 SliderInputSize = new(45,ControlHeight);
     private static readonly SVector2 DefaultWindowOffset = new SVector2(10, 10);
-    private static Dictionary<string, List<Palettes.Swatch>> MaterialNo50 =>
+    private static Dictionary<string, List<Palettes.Swatch>> MaterialFiltered =>
     Palettes.Material.ToDictionary(
         kvp => kvp.Key,
         kvp => kvp.Value.Where(swatch => !swatch.Name.EndsWith(" 50")).ToList()
     );
 
+    // working variables
     private static SVector4 default_rgbaNormalized;
     private static HSLA working_HSLA;
+    private static int selcted = 0;
+    private static SVector2 windowSize = PickerWindowSize;
+    private static int calculatedPaletteWindowHeight = 100;
+    private static int calculatedPickerWindowHeight = 100;
+    private static Options activeOptions = new Options();
 
-
-
-
-
-
-
-    /**
-
-float oldH = _hue, oldS = _sat, oldL = _light, oldA = _alpha;
-DrawHueSlider(contentPos + new SVector2(10, 10), ref _hue, _sat / 100f, _light / 100f);
-DrawSaturationSlider(contentPos + new SVector2(10, 10 + SliderHeight + 10), ref _sat, _hue, _light / 100f);
-DrawLightnessSlider(contentPos + new SVector2(10, 10 + 2 * (SliderHeight + 10)), ref _light, _hue, _sat / 100f);
-DrawAlphaSlider(contentPos + new SVector2(10, 10 + 3 * (SliderHeight + 10)), ref _alpha, _hue, _sat / 100f, _light / 100f);
-if (_hue != oldH || _sat != oldS || _light != oldL || _alpha != oldA) {
-color = ColorTools.HSLA2RGBA(_hue, _sat / 100f, _light / 100f, _alpha / 100f);
-}
-
-SVector4 oldColor = color;
-int colorInputWidth = 40;
-int ColorInputGap = 6;
-int hexInputWidth = colorInputWidth * 3 + ColorInputGap * 2;
-DrawHexColorInput(contentPos + new SVector2(10, 126), hexInputWidth, ref color);
-DrawRedColorInput(contentPos + new SVector2(10, 151), colorInputWidth, ref color);
-DrawGreenColorInput(contentPos + new SVector2(10 + colorInputWidth + ColorInputGap, 151), colorInputWidth, ref color);
-DrawBlueColorInput(contentPos + new SVector2(10 + colorInputWidth * 2 + ColorInputGap * 2, 151), colorInputWidth, ref color);
-DrawRGBAInput(contentPos + new SVector2(10 + hexInputWidth + 10, 126), 218, ref color);
-DrawColorWithReset(contentPos + new SVector2(380, 126), 45, 44, ref color, _defaultColor);
-
-if (!color.Equals(oldColor)) {
-ColorTools.RGBA2HSLA(color, out _hue, out _sat, out _light, out _alpha);
-_sat *= 100f;
-_light *= 100f;
-_alpha *= 100f;
-}
-**/
 
     public class Options
     {
         public string Title = "Color Picker";
         public SVector2 WindowOffset = DefaultWindowOffset;
-        public SVector2 Size = new(441, 395);
+        public uint ControlOuterGlow = Colors.ControlOuterGlow; 
     }
 
     public static void Open(string unique_id, SVector4 rgbaNormalized, SVector2? windowOffset) {
@@ -73,14 +47,16 @@ _alpha *= 100f;
 
     public static void Draw(string unique_id, ref SVector4 rgbaNormalized, Options options = null) {
         // Initialize default values if not set
-        if (options == null) options = new Options();
+        if (options == null) activeOptions = new Options();
 
-        var working_RGBA = rgbaNormalized;
+        windowSize.Y = calculatedPickerWindowHeight + calculatedPaletteWindowHeight;
 
-        PopupWindow.Draw(unique_id, new PopupWindow.Options { Size = options.Size, Title = options.Title, PanelPadding = new(0,3,200,3) }, (contentPos) => {
+        if (PopupWindow.Begin(unique_id, new PopupWindow.Options { Size = windowSize, Title = activeOptions.Title, PanelPadding = new SVector4(0, 3, calculatedPaletteWindowHeight + PopupPaddingBottom, 3) })) {
+            var popupTop = ImGui.GetWindowPos().Y; // Top of the popup window
+            var contentPos = ImGui.GetCursorScreenPos();
+            var layoutPos = contentPos + ContentPadding;
+
             var old_HSLA = working_HSLA;
-            SVector2 layoutPos = contentPos + ContentPadding;
-
             DrawHueSlider(layoutPos, ref working_HSLA);
             layoutPos.Y += ControlHeight + ControlSpacing.Y;
             DrawSaturationSlider(layoutPos, ref working_HSLA);
@@ -88,110 +64,77 @@ _alpha *= 100f;
             DrawLightnessSlider(layoutPos, ref working_HSLA);
             layoutPos.Y += ControlHeight + ControlSpacing.Y;
             DrawAlphaSlider(layoutPos, ref working_HSLA);
-            if (old_HSLA != working_HSLA) working_RGBA = working_HSLA.ToNormalisedRGBA();
+            if (old_HSLA != working_HSLA) rgbaNormalized = working_HSLA.ToNormalisedRGBA();
 
-            SVector4 old_RGBA = working_RGBA;
-            int red = (int)Math.Round(working_RGBA.X * 255);
-            int green = (int)Math.Round(working_RGBA.Y * 255);
-            int blue = (int)Math.Round(working_RGBA.Z * 255);
+            var old_rgbaNormalized = rgbaNormalized;
+            int red = (int)Math.Round(rgbaNormalized.X * 255);
+            int green = (int)Math.Round(rgbaNormalized.Y * 255);
+            int blue = (int)Math.Round(rgbaNormalized.Z * 255);
 
             // Draw hexinput
             layoutPos.Y += ControlHeight + ControlSpacing.Y;
             int hexInputWidth = (int)(SliderInputSize.X * 3 + InputSpacing.X * 2);
-            DrawHexColorInput(layoutPos, hexInputWidth, ref working_RGBA);
+            DrawHexColorInput(layoutPos, hexInputWidth, ref rgbaNormalized);
             //Draw RGBA Input
             layoutPos.X += hexInputWidth + ControlSpacing.X;
             int rgbaInputWidth = (int)(SliderSize.X - hexInputWidth - ControlSpacing.X);
-            DrawRGBAInput(layoutPos, rgbaInputWidth, ref working_RGBA);
+            DrawRGBAInput(layoutPos, rgbaInputWidth, ref rgbaNormalized);
             // Draw Color Swatch with Reset Button
             layoutPos.X += ControlSpacing.X + rgbaInputWidth;
-            DrawColorWithReset(layoutPos, (int)SliderInputSize.X, (int)SliderInputSize.X, ref working_RGBA);
+            DrawColorWithReset(layoutPos, (int)SliderInputSize.X, (int)SliderInputSize.X, ref rgbaNormalized);
 
             // Draw Red Input
             layoutPos.X = contentPos.X + ContentPadding.X; // Reset X position for inputs
             layoutPos.Y += ControlHeight + InputSpacing.Y;
             ImGui.SetCursorScreenPos(layoutPos);
-            if (InputSpinner.Draw("ColorPickerRed", ref red, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = (int)SliderInputSize.Y, Max = 255, Tooltip = Tooltip.BasicOptions("Red Component") }))
-                working_RGBA.X = Math.Clamp(red, 0, 255) / 255f;
+            if (InputSpinner.Draw("ColorPickerRed", ref red, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = ControlHeight, Max = 255, Tooltip = Tooltip.BasicOptions("Red Component") }))
+                rgbaNormalized.X = Math.Clamp(red, 0, 255) / 255f;
             // Draw Green Input
             layoutPos.X += SliderInputSize.X + InputSpacing.X;
             ImGui.SetCursorScreenPos(layoutPos);
-            if (InputSpinner.Draw("ColorPickerGreen", ref green, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = (int)SliderInputSize.Y, Max = 255, Tooltip = Tooltip.BasicOptions("Green Component") }))
-                working_RGBA.Y = Math.Clamp(green, 0, 255) / 255f;
+            if (InputSpinner.Draw("ColorPickerGreen", ref green, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = ControlHeight, Max = 255, Tooltip = Tooltip.BasicOptions("Green Component") }))
+                rgbaNormalized.Y = Math.Clamp(green, 0, 255) / 255f;
             // Draw Blue Input
             layoutPos.X += SliderInputSize.X + InputSpacing.X;
             ImGui.SetCursorScreenPos(layoutPos);
-            if (InputSpinner.Draw("ColorPickerBlue", ref blue, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = (int)SliderInputSize.Y, Max = 255, Tooltip = Tooltip.BasicOptions("Blue Component") }))
-                working_RGBA.Z = Math.Clamp(blue, 0, 255) / 255f;
+            if (InputSpinner.Draw("ColorPickerBlue", ref blue, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = ControlHeight, Max = 255, Tooltip = Tooltip.BasicOptions("Blue Component") }))
+                rgbaNormalized.Z = Math.Clamp(blue, 0, 255) / 255f;
+
+            // Draw Palette Select
+            layoutPos.X += SliderInputSize.X + ControlSpacing.X;
+            ImGui.SetCursorScreenPos(layoutPos);
+
+            Select.Draw("ColorPickerPaletteSelect", ref selcted, new Select.Options {
+                Width = rgbaInputWidth,
+                Height = ControlHeight,
+                Items = new() { "Google Material" },
+                Tooltip = new Tooltip.Options { Lines = { new Tooltip.Title { Text = "Palette Select" } } }
+            });
+
+            layoutPos.Y += ControlHeight + ContentPadding.Y;
+            calculatedPickerWindowHeight = (int)(layoutPos.Y - popupTop - 1 + PopupPaddingBottom); // cant figureout that 1 
 
             // Draw Palette 
-            layoutPos.X = contentPos.X - 1 ; // Reset X position for palette
-            layoutPos.Y += ControlHeight + 12;
+            layoutPos.X = contentPos.X; // Reset X position for palette
+            layoutPos.Y += PopupPaddingBottom;
             ImGui.SetCursorScreenPos(layoutPos);
-            DrawPalette( MaterialNo50, 437, 16, new SVector2(-1,-1), ref working_RGBA);
+            calculatedPaletteWindowHeight = DrawPalette(MaterialFiltered, 435, 16, new SVector2(-1, -1), ref rgbaNormalized) + PopupPaddingBottom;
 
 
+            if (old_rgbaNormalized != rgbaNormalized)
+                working_HSLA = HSLA.FromNormalisedRGBA(rgbaNormalized);
 
-            if (old_RGBA != working_RGBA) 
-                working_HSLA = HSLA.FromNormalisedRGBA(working_RGBA);
-
-        });
-        rgbaNormalized = working_RGBA;
+            PopupWindow.End();
+        }
     }
 
-    //private static void DrawGreenColorInput(SVector2 inputPos, int inputWidth, ref SVector4 color) {
-    //    // Custom draw background and borders
-    //    var drawList = ImGui.GetWindowDrawList();
-    //    drawList.AddRectFilled(inputPos, inputPos + new SVector2(inputWidth, ControlHeight), UIColors.ControlInput);
-    //    drawList.AddRect(inputPos - new SVector2(1, 1), inputPos + new SVector2(inputWidth + 1, ControlHeight + 1), UIColors.Black);
-    //    drawList.AddRect(inputPos - new SVector2(2, 2), inputPos + new SVector2(inputWidth + 2, ControlHeight + 2), UIColors.ControlBorder);
-    //
-    //    int g = (int)Math.Round(color.Y * 255);
-    //    string gBuf = g.ToString();
-    //
-    //    ImGui.PushStyleColor(ImGuiCol.FrameBg, 0x00000000);
-    //    ImGui.PushStyleColor(ImGuiCol.Border, 0x00000000);
-    //    ImGui.SetCursorScreenPos(inputPos + new SVector2(4, 0));
-    //    ImGui.PushItemWidth(inputWidth - 8);
-    //
-    //    bool valueChanged = false;
-    //    if (ImGui.InputText("##ColorPickergreeninput", ref gBuf, 4, ImGuiInputTextFlags.CharsDecimal))
-    //        valueChanged = true;
-    //
-    //    if (ImGui.IsItemHovered()) {
-    //        float wheel = ImGui.GetIO().MouseWheel;
-    //        if (wheel != 0) {
-    //            int newG;
-    //            if (!int.TryParse(gBuf, out newG)) newG = g;
-    //            newG += Math.Sign(wheel);
-    //            newG = Math.Clamp(newG, 0, 255);
-    //            gBuf = newG.ToString();
-    //            valueChanged = true;
-    //        }
-    //        // Tooltip
-    //        Tooltip.Draw(new Tooltip.Options {
-    //            Lines = {
-    //            new Tooltip.Title { Text = "Green Component" },
-    //        }
-    //        });
-    //    }
-    //
-    //    if (valueChanged) {
-    //        if (int.TryParse(gBuf, out int newG)) {
-    //            color.Y = Math.Clamp(newG, 0, 255) / 255f;
-    //        }
-    //    }
-    //
-    //    ImGui.PopItemWidth();
-    //    ImGui.PopStyleColor(2);
-    //}
 
 
 
     private static void DrawHueSlider(SVector2 pos, ref HSLA working_HSLA) {
         var drawList = ImGui.GetWindowDrawList();
         // Draw border
-        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), Colors.ControlOuterBorder); // Outer border
+        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), activeOptions.ControlOuterGlow); // Outer border
         drawList.AddRect(pos, pos + SliderSize, Colors.Black); // Black Border
         // Draw Slider
         SVector2 sliderPos = pos + new SVector2(1, 1);
@@ -243,7 +186,7 @@ _alpha *= 100f;
     private static void DrawSaturationSlider(SVector2 pos, ref HSLA working_HSLA) {
         var drawList = ImGui.GetWindowDrawList();
         // Draw border
-        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), Colors.ControlOuterBorder); // Outer border
+        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), activeOptions.ControlOuterGlow); // Outer border
         drawList.AddRect(pos, pos + SliderSize, Colors.Black); // Black Border
         // Draw Slider
         SVector2 sliderPos = pos + new SVector2(1, 1);
@@ -304,7 +247,7 @@ _alpha *= 100f;
     private static void DrawLightnessSlider(SVector2 pos, ref HSLA working_HSLA) {
         var drawList = ImGui.GetWindowDrawList();
         // Draw border
-        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), Colors.ControlOuterBorder); // Outer border
+        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), activeOptions.ControlOuterGlow); // Outer border
         drawList.AddRect(pos, pos + SliderSize, Colors.Black); // Black Border
 
         // Draw Slider
@@ -364,7 +307,7 @@ _alpha *= 100f;
     private static void DrawAlphaSlider(SVector2 pos, ref HSLA working_HSLA) {
         var drawList = ImGui.GetWindowDrawList();
         // Draw border
-        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), Colors.ControlOuterBorder); // Outer border
+        drawList.AddRect(pos - new SVector2(1, 1), pos + SliderSize + new SVector2(1, 1), activeOptions.ControlOuterGlow); // Outer border
         drawList.AddRect(pos, pos + SliderSize, Colors.Black); // Black Border
 
         // Draw Slider
@@ -421,7 +364,6 @@ _alpha *= 100f;
         if (InputSpinner.Draw("ColorPickerAlphaSlider", ref value, new InputSpinner.Options { Width = (int)SliderInputSize.X, Height = (int)SliderInputSize.Y }))
             working_HSLA.A = value / 100;
     }
-
     private static void DrawHexColorInput(SVector2 pos, int inputWidth, ref SVector4 color) {
         // convert color to hex
         int r = (int)Math.Round(color.X * 255);
@@ -431,7 +373,7 @@ _alpha *= 100f;
         string hexBuf = $"#{r:X2}{g:X2}{b:X2}{a:X2}";
 
         ImGui.SetCursorScreenPos(pos);
-        Input.Draw("##ColorPickerHexInput", ref hexBuf, new Input.Options { Width = inputWidth, Height = ControlHeight, DisplayOnly = true });
+        Display.Draw("##ColorPickerHexInput", hexBuf, new Display.Options { Width = inputWidth, Height = ControlHeight });
 
         if (ImGui.IsItemHovered()) {
             if (ImGui.GetIO().KeyCtrl && ImGui.IsMouseClicked(ImGuiMouseButton.Left)) {
@@ -477,7 +419,7 @@ _alpha *= 100f;
         string rgbaBuf = $"Color({r},{g},{b},{a})";
 
         ImGui.SetCursorScreenPos(pos);
-        Input.Draw("##ColorPickerRGBAInput", ref rgbaBuf, new Input.Options { Width = inputWidth, Height = ControlHeight, DisplayOnly = true });
+        Display.Draw("##ColorPickerRGBAInput", rgbaBuf, new Display.Options { Width = inputWidth, Height = ControlHeight });
 
         if (ImGui.IsItemHovered()) {
             if (ImGui.GetIO().KeyCtrl && ImGui.IsMouseClicked(ImGuiMouseButton.Left)) {
@@ -515,13 +457,16 @@ _alpha *= 100f;
         // Large color box
         ImGUITools.DrawCheckerboard(pos, inputWidth, inputHeight);
         drawList.AddRectFilled(pos, pos + new SVector2(inputWidth, inputHeight), ImGui.ColorConvertFloat4ToU32(color));
+        drawList.AddRect(pos + new SVector2(1, 1), pos + new SVector2(inputWidth - 1, inputHeight - 1), Colors.SwatchInnerGlow);
+
         drawList.AddRect(pos, pos + new SVector2(inputWidth, inputHeight), Colors.Black);
-        drawList.AddRect(pos - new SVector2(1, 1), pos + new SVector2(inputWidth + 1, inputHeight + 1), Colors.ControlOuterBorder);
+        drawList.AddRect(pos - new SVector2(1, 1), pos + new SVector2(inputWidth + 1, inputHeight + 1), activeOptions.ControlOuterGlow);
 
         // Small reset box (top-left corner, flush with big box)
         SVector2 smallPos = pos;
         ImGUITools.DrawCheckerboard(pos, smallBoxSize, smallBoxSize);
         drawList.AddRectFilled(smallPos, smallPos + new SVector2(smallBoxSize, smallBoxSize), ImGui.ColorConvertFloat4ToU32(default_rgbaNormalized));
+        drawList.AddRect(smallPos + new SVector2(1, 1), smallPos + new SVector2(smallBoxSize - 1, smallBoxSize - 1), Colors.SwatchInnerGlow);
         drawList.AddRect(smallPos, smallPos + new SVector2(smallBoxSize, smallBoxSize), Colors.Black);
 
         // Invisible button for small box
@@ -546,35 +491,43 @@ _alpha *= 100f;
             }});
         }
     }
-    /// <summary>
-    /// Draws the Material palette as rows of color swatches.
-    /// </summary>
-    /// <param name="palette">The palette dictionary (e.g., Palettes.Material).</param>
-    /// <param name="width">Total width for the swatch row.</param>
-    /// <param name="colorSpacing">Spacing between swatches (X: horizontal, Y: vertical).</param>
-    /// <param name="selectedColor">Ref to normalized RGBA color, set when a swatch is clicked.</param>
-    public static void DrawPalette(Dictionary<string, List<Palettes.Swatch>> palette, int paletteWidth, int colorHeight, SVector2 colorSpacing, ref SVector4 selectedColor) {
+    public static int DrawPalette(Dictionary<string, List<Palettes.Swatch>> palette, int paletteWidth, int colorHeight, SVector2 colorSpacing, ref SVector4 selectedColor) {
         var drawList = ImGui.GetWindowDrawList();
         SVector2 cursor = ImGui.GetCursorScreenPos();
 
         int columnCount = palette.Count;
         int spacingX = (int)Math.Round(colorSpacing.X);
 
-        // Calculate base column width and remainder for last column
-        int baseColumnWidth = (paletteWidth - (columnCount - 1) * spacingX) / columnCount;
-        int remainder = paletteWidth - ((baseColumnWidth + spacingX) * (columnCount - 1) + baseColumnWidth);
+        // Calculate swatch width (all the same, pixel perfect)
+        int totalSpacing = (columnCount - 1) * spacingX;
+        int swatchWidth = (paletteWidth - totalSpacing) / columnCount;
 
+        // Calculate left/right margin to center the palette
+        int usedWidth = columnCount * swatchWidth + totalSpacing;
+        int leftMargin = (paletteWidth - usedWidth) / 2;
+
+        // Use leftMargin for top/bottom padding
+        int topBottomPad = leftMargin;
+
+        // Calculate palette height (max swatch count in any column)
+        int maxSwatchCount = palette.Max(g => g.Value.Count);
+        int spacingY = (int)Math.Round(colorSpacing.Y);
+        int paletteHeight = maxSwatchCount * colorHeight + ((maxSwatchCount > 1) ? (maxSwatchCount - 1) * spacingY : 0);
+
+        // Draw background box
+        var bgStart = cursor;
+        var bgEnd = cursor + new SVector2(paletteWidth, paletteHeight + 2 * topBottomPad);
+        //drawList.AddRectFilled(bgStart, bgEnd, ColorTools.RGBA2Uint(100,100,100,100));
+        drawList.AddRectFilled(bgStart, bgEnd, Colors.Panel);
+        drawList.AddRect(bgStart, bgEnd, Colors.PanelInnerGlow);
+
+        // Draw palette swatches centered with padding
         int colIndex = 0;
         foreach (var group in palette) {
-            int thisColumnWidth = baseColumnWidth;
-            if (colIndex == columnCount - 1)
-                thisColumnWidth += remainder; // Last column absorbs rounding error
-
-            int colX = (int)Math.Round(cursor.X + colIndex * (baseColumnWidth + spacingX));
-            int colY = (int)Math.Round(cursor.Y);
+            int colX = (int)Math.Round(cursor.X + leftMargin + colIndex * (swatchWidth + spacingX));
+            int colY = (int)Math.Round(cursor.Y + topBottomPad);
 
             int swatchCount = group.Value.Count;
-            int spacingY = (int)Math.Round(colorSpacing.Y);
 
             for (int i = 0; i < swatchCount; i++) {
                 var swatch = group.Value[i];
@@ -583,20 +536,17 @@ _alpha *= 100f;
                 var swatchPos = new SVector2(colX, swatchY);
 
                 // Draw swatch background
-                drawList.AddRectFilled(
-                    swatchPos,
-                    swatchPos + new SVector2(thisColumnWidth, colorHeight),
-                    swatch.Value);
+                drawList.AddRectFilled(swatchPos, swatchPos + new SVector2(swatchWidth, colorHeight), swatch.Value);
+
+                // Draw inner glow
+                drawList.AddRect(swatchPos + new SVector2(1, 1), swatchPos + new SVector2(swatchWidth - 1, colorHeight - 1), Colors.SwatchInnerGlow);
 
                 // Draw black border
-                drawList.AddRect(
-                    swatchPos,
-                    swatchPos + new SVector2(thisColumnWidth, colorHeight),
-                    0xFF000000);
+                drawList.AddRect(swatchPos, swatchPos + new SVector2(swatchWidth, colorHeight), 0xFF000000);
 
                 // Draw invisible button for interaction
                 ImGui.SetCursorScreenPos(swatchPos);
-                if (ImGui.InvisibleButton($"##swatch_{group.Key}_{i}", new SVector2(thisColumnWidth, colorHeight))) {
+                if (ImGui.InvisibleButton($"##swatch_{group.Key}_{i}", new SVector2(swatchWidth, colorHeight))) {
                     selectedColor = new SVector4(
                         swatch.Red / 255f,
                         swatch.Green / 255f,
@@ -606,17 +556,16 @@ _alpha *= 100f;
 
                 // Optional: Tooltip
                 if (ImGui.IsItemHovered()) {
-                    Tooltip.Draw(new Tooltip.Options {
-                        Lines = {
-                            new Tooltip.Title { Text = $"{swatch.Name}" },
-                        }
-                    });
+                    Tooltip.Draw(new Tooltip.Options { Lines = { new Tooltip.Title { Text = $"{swatch.Name}" } } });
                 }
             }
-
             colIndex++;
         }
+
+        // Return the full height of the panel drawn
+        return paletteHeight + 2 * topBottomPad;
     }
+
 }
 
 

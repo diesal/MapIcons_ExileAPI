@@ -1,7 +1,9 @@
-﻿using SVector2 = System.Numerics.Vector2;
-using SVector4 = System.Numerics.Vector4;
+﻿using ExileCore.Shared.Helpers;
 using ImGuiNET;
+using System.Reflection;
 using DT = DieselTools_ExileAPI;
+using SVector2 = System.Numerics.Vector2;
+using SVector4 = System.Numerics.Vector4;
 
 namespace MapIcons
 {
@@ -43,7 +45,7 @@ namespace MapIcons
                             Name = "Shrine",
                             MapIconType = MapIconTypes.Shrine,
                             Config = TreeIconConfigs.IngameIcon,
-                            DefaultSettings = new MapIconSettings { DrawState = IconDrawStates.Always, DrawText = true }
+                            DefaultSettings = new MapIconSettings { DrawState = IconDrawStates.Always, DrawName = true }
                         },
                         new TreeIcon {
                             Name = "Breach",
@@ -61,7 +63,7 @@ namespace MapIcons
                             Name = "Quest Object",
                             MapIconType = MapIconTypes.QuestObject,
                             Config = TreeIconConfigs.IngameIcon,
-                            DefaultSettings = new MapIconSettings { DrawState = IconDrawStates.Ranged }
+                            DefaultSettings = new MapIconSettings { DrawState = IconDrawStates.Ranged, DrawName = true }
                         },
                         new TreeIcon {
                             Name = "Ritual",
@@ -104,9 +106,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.VolatileCore,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 17,
-                                Tint = new SharpDX.Color(255, 0, 224, 255),
-                                HiddenTint = new SharpDX.Color(255, 160, 195, 255),
+                                Index = 25,
+                                Tint = new SharpDX.Color(213,0,249,255), 
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                         new TreeIcon {
@@ -114,9 +116,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.DrowningOrb,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 17,
-                                Tint = new SharpDX.Color(255, 0, 224, 255),
-                                HiddenTint = new SharpDX.Color(255, 160, 195, 255),
+                                Index = 25,
+                                Tint = new SharpDX.Color(213,0,249,255),
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                         new TreeIcon {
@@ -124,9 +126,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.LightningClone,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 17,
-                                Tint = new SharpDX.Color(255, 0, 224, 255),
-                                HiddenTint = new SharpDX.Color(255, 160, 195, 255),
+                                Index = 25,
+                                Tint = new SharpDX.Color(213,0,249,255),
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                         new TreeIcon {
@@ -134,9 +136,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ConsumingPhantasm,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 17,
-                                Tint = new SharpDX.Color(255, 0, 224, 255),
-                                HiddenTint = new SharpDX.Color(255, 160, 195, 255),
+                                Index = 25,
+                                Tint = new SharpDX.Color(213,0,249,255),
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                     },
@@ -150,9 +152,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.LabyrinthRoomba,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 39,
-                                Tint = new SharpDX.Color(255, 0, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 0, 0, 60),
+                                Index = 55,
+                                Tint = new SharpDX.Color(213,0,0,255),
+                                HiddenTint = new SharpDX.Color(213,0,0,64),
                             }
                         },
                         new TreeIcon {
@@ -160,9 +162,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.LabyrinthCascadeSpikeTrap,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 39,
-                                Tint = new SharpDX.Color(255, 0, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 0, 0, 60),
+                                Index = 55,
+                                Tint = new SharpDX.Color(213,0,0,255),
+                                HiddenTint = new SharpDX.Color(213,0,0,64),
                             }
                         },
                         new TreeIcon {
@@ -170,9 +172,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.LabyrinthSawblade,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 34,
-                                Tint = new SharpDX.Color(255, 0, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 0, 0, 60),
+                                Index = 50,
+                                Tint = new SharpDX.Color(213,0,0,255),
+                                HiddenTint = new SharpDX.Color(213,0,0,64),
                             }
                         },
                         new TreeIcon {
@@ -180,7 +182,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.LabyrinthSpinner,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 36,
+                                Index = 52,
                                 Tint = new SharpDX.Color(255, 0, 0, 255),
                                 HiddenTint = new SharpDX.Color(255, 0, 0, 60),
                             }
@@ -190,7 +192,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.LabyrinthRoller,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 35,
+                                Index = 51,
                                 Tint = new SharpDX.Color(255, 0, 0, 255),
                                 HiddenTint = new SharpDX.Color(255, 0, 0, 60),
                             }
@@ -207,8 +209,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.WhiteMonster,
                             DefaultSettings = new MapIconSettings
                             {
-                                Tint = new SharpDX.Color(255, 0, 0, 255), // Red
-                                HiddenTint = new SharpDX.Color(255, 185, 185, 255), // Light Red
+                                Tint = new SharpDX.Color(213,0,0,255), 
+                                HiddenTint = new SharpDX.Color(255,185,179,255), // Light Red
                             }
                         },
                         new TreeIcon {
@@ -217,8 +219,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.MagicMonster,
                             DefaultSettings = new MapIconSettings {
                                 Index = 1,
-                                Tint = new SharpDX.Color(0, 146, 255, 255),
-                                HiddenTint = new SharpDX.Color(185, 225, 255, 255),
+                                Tint = new SharpDX.Color(0,145,234,255),
+                                HiddenTint = new SharpDX.Color(179,232,255,255),
                             }
                         },
                         new TreeIcon {
@@ -227,8 +229,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.RareMonster,
                             DefaultSettings = new MapIconSettings {
                                 Index = 2,
-                                Tint = new SharpDX.Color(255, 210, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 242, 185, 255),
+                                Tint = new SharpDX.Color(255,214,0,255),
+                                HiddenTint = new SharpDX.Color(255,255,179,255),
                             }
                         },
                         new TreeIcon {
@@ -236,9 +238,10 @@ namespace MapIcons
                             Config = TreeIconConfigs.Monster,
                             MapIconType = MapIconTypes.UniqueMonster,
                             DefaultSettings = new MapIconSettings {
-                                Index = 3,
-                                Tint = new SharpDX.Color(255, 113, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 221, 195, 255),
+                                AnimateLife = true,
+                                Index = 40,
+                                Tint = new SharpDX.Color(255,109,0,255),
+                                HiddenTint = new SharpDX.Color(255,218,153,255),
                             }
                         },
                         new TreeIcon {
@@ -247,8 +250,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.RogueExile,
                             DefaultSettings = new MapIconSettings {
                                 Index = 2,
-                                Tint = new SharpDX.Color(255, 113, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 221, 195, 255),
+                                Tint = new SharpDX.Color(255,109,0,255),
+                                HiddenTint = new SharpDX.Color(255,218,153,255),
                             }
                         },
                         new TreeIcon {
@@ -256,9 +259,9 @@ namespace MapIcons
                             Config = TreeIconConfigs.Monster,
                             MapIconType = MapIconTypes.GiantRogueExile,
                             DefaultSettings = new MapIconSettings {
-                                Index = 3,
-                                Tint = new SharpDX.Color(255, 113, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 221, 195, 255),
+                                Index = 98,
+                                Tint = new SharpDX.Color(255,109,0,255),
+                                HiddenTint = new SharpDX.Color(255,218,153,255),
                             }
                         },
                         new TreeIcon {
@@ -267,8 +270,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.Spirit,
                             DefaultSettings = new MapIconSettings {
                                 Index = 2,
-                                Tint = new SharpDX.Color(255, 113, 0, 255),
-                                HiddenTint = new SharpDX.Color(255, 221, 195, 255),
+                                Tint = new SharpDX.Color(192,202,51,255),
+                                HiddenTint = new SharpDX.Color(233,240,168,255),
                             }
                         },
                     },
@@ -282,9 +285,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.BloodBag,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 50,
-                                Tint = new SharpDX.Color(255, 0, 187, 255),
-                                HiddenTint = new SharpDX.Color(255, 175, 242, 255),
+                                Index = 74,
+                                Tint = new SharpDX.Color(213,0,249,255),
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                         new TreeIcon {
@@ -292,9 +295,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.EggFodder,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 50,
-                                Tint = new SharpDX.Color(255, 0, 187, 255),
-                                HiddenTint = new SharpDX.Color(255, 175, 242, 255),
+                                Index = 74,
+                                Tint = new SharpDX.Color(213,0,249,255),
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                         new TreeIcon {
@@ -302,23 +305,23 @@ namespace MapIcons
                             MapIconType = MapIconTypes.GlobSpawn,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 50,
-                                Tint = new SharpDX.Color(255, 0, 187, 255),
-                                HiddenTint = new SharpDX.Color(255, 175, 242, 255),
+                                Index = 74,
+                                Tint = new SharpDX.Color(213,0,249,255),
+                                HiddenTint = new SharpDX.Color(244,179,255,255),
                             }
                         },
                     },
                 },
                 // Beasts
                 new TreeCategory {
-                    Name = "Capturable Beasts",
+                    Name = "Valuable Beasts",
                     TreeIcons = new List<TreeIcon> {
                         new TreeIcon {
                             Name = "Black Morrigan",
                             MapIconType = MapIconTypes.BlackMorrigan,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 130,
+                                Index = 194,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             }
@@ -328,7 +331,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.VividVulture,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 129,
+                                Index = 193,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             }
@@ -338,7 +341,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.CraicicChimeral,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 129,
+                                Index = 193,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             }
@@ -348,7 +351,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.WildBristleMatron,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 128,
+                                Index = 192,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             }
@@ -358,7 +361,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.WildHellionAlpha,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 128,
+                                Index = 192,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             }
@@ -368,7 +371,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.FenumalPlaguedArachnid,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 128,
+                                Index = 192,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             }
@@ -378,7 +381,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.FenumusFirstOfTheNight,
                             Config = TreeIconConfigs.Default,
                             DefaultSettings = new MapIconSettings {
-                                Index = 128,
+                                Index = 192,
                                 Tint = new SharpDX.Color(0, 239, 255, 255),
                                 HiddenTint = new SharpDX.Color(205, 252, 255, 255),
                             },
@@ -391,51 +394,59 @@ namespace MapIcons
                     TreeIcons = new List<TreeIcon> {
                         new TreeIcon {
                             Name = "Local Player",
-                            Config = TreeIconConfigs.Monster,
+                            Config = TreeIconConfigs.Friendly,
                             MapIconType = MapIconTypes.LocalPlayer,
                             DefaultSettings = new MapIconSettings
                             {
                                 Draw = false,
+                                Tint = new SharpDX.Color(100,221,23,255),
+                                HiddenTint = new SharpDX.Color(210,247,186,255),
                             }
                         },
                         new TreeIcon {
                             Name = "Other Player",
-                            Config = TreeIconConfigs.Monster,
+                            Config = TreeIconConfigs.Friendly,
                             MapIconType = MapIconTypes.OtherPlayer,
                             DefaultSettings = new MapIconSettings
                             {
                                 Draw = false,
+                                Tint = new SharpDX.Color(100,221,23,255),
+                                HiddenTint = new SharpDX.Color(210,247,186,255),
                             }
                         },
                         new TreeIcon {
                             Name = "NPC",
-                            Config = TreeIconConfigs.Monster,
+                            Config = TreeIconConfigs.Friendly,
                             MapIconType = MapIconTypes.NPC,
                             DefaultSettings = new MapIconSettings
                             {
-                                Tint = new SharpDX.Color(0, 255, 0, 255), // Green
-                                HiddenTint = new SharpDX.Color(185, 255, 185, 255), // Light Green
+                                Draw = false,
+                                Index = 1,
+                                Tint = new SharpDX.Color(100,221,23,255),
+                                HiddenTint = new SharpDX.Color(210,247,186,255),
                             }
                         },
-                        new TreeIcon {
+                        new TreeIcon { 
                             Name = "Minion",
-                            Config = TreeIconConfigs.Monster,
+                            Config = TreeIconConfigs.Friendly,
                             MapIconType = MapIconTypes.Minion,
                             DefaultSettings = new MapIconSettings
                             {
-                                Tint = new SharpDX.Color(0, 0, 255, 255), // Blue
-                                HiddenTint = new SharpDX.Color(185, 185, 255, 255), // Light Blue
+                                Draw = false,
+                                Tint = new SharpDX.Color(100,221,23,255),
+                                HiddenTint = new SharpDX.Color(210,247,186,255),
                             }
                         },
                         new TreeIcon {
                             Name = "Decoy Totem",
-                            Config = TreeIconConfigs.Monster,
+                            Config = TreeIconConfigs.Friendly,
                             MapIconType = MapIconTypes.DecoyTotem,
                             DefaultSettings = new MapIconSettings
                             {
-                                DrawText = true,
-                                Tint = new SharpDX.Color(0, 255, 0, 255), // Green
-                                HiddenTint = new SharpDX.Color(185, 255, 185, 255), // Light Green
+                                AnimateLife = true,
+                                Index = 16,
+                                Tint = new SharpDX.Color(100,221,23,255),
+                                HiddenTint = new SharpDX.Color(210,247,186,255), 
                             }
                         },
                     },
@@ -450,7 +461,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.BreakableObject,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
+                                Draw = false,
+                                Index = 360,
                                 Tint = new SharpDX.Color(137, 137, 137, 255),
                             }
                         },
@@ -459,7 +471,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ChestWhite,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 241,
+                                Draw = false,
+                                Index = 360,
                                 Tint = new SharpDX.Color(255, 255, 255, 255),
                             }
                         },
@@ -468,8 +481,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ChestMagic,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
-                                Tint = new SharpDX.Color(0, 146, 255, 255),
+                                Index = 360,
+                                Tint = new SharpDX.Color(0,145,234,255),
                             }
                         },
                         new TreeIcon {
@@ -477,8 +490,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ChestRare,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
-                                Tint = new SharpDX.Color(255, 240, 0, 255),
+                                Index = 360,
+                                Tint = new SharpDX.Color(255,214,0,255),
                             }
                         },
                         new TreeIcon {
@@ -486,9 +499,9 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ChestUnique,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
-                                Tint = new SharpDX.Color(255, 164, 0, 255),
-                                HiddenTint = new SharpDX.Color(185, 225, 255, 255),
+                                Index = 360,
+                                Tint = new SharpDX.Color(255,109,0,255),
+                                HiddenTint = new SharpDX.Color(255,218,153,255),
                             }
                         },
                         new TreeIcon {
@@ -496,7 +509,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.BreachChestNormal,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
+                                Index = 360,
                                 Tint = new SharpDX.Color(233, 0, 255, 255),
                             }
                         },
@@ -505,7 +518,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.BreachChestLarge,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 241,
+                                Index = 361,
                                 Tint = new SharpDX.Color(233, 0, 255, 255),
                             }
                         },
@@ -514,7 +527,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ExpeditionChestWhite,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
+                                Index = 360,
                                 Tint = new SharpDX.Color(255, 255, 255, 255),
                             }
                         },
@@ -523,8 +536,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ExpeditionChestMagic,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
-                                Tint = new SharpDX.Color(0, 146, 255, 255),
+                                Index = 360,
+                                Tint = new SharpDX.Color(0,145,234,255),
                             }
                         },
                         new TreeIcon {
@@ -532,8 +545,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.ExpeditionChestRare,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
-                                Tint = new SharpDX.Color(255, 240, 0, 255),
+                                Index = 360,
+                                Tint = new SharpDX.Color(255,214,0,255),
                             }
                         },
                         new TreeIcon {
@@ -541,7 +554,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.SanctumChest,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
+                                Index = 360,
                                 Tint = new SharpDX.Color(219, 0, 255, 255),
                             }
                         },
@@ -550,8 +563,8 @@ namespace MapIcons
                             MapIconType = MapIconTypes.PirateChest,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
-                                Tint = new SharpDX.Color(255, 240, 0, 255),
+                                Index = 360,
+                                Tint = new SharpDX.Color(255,214,0,255),
                             }
                         },
                         new TreeIcon {
@@ -559,7 +572,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.AbyssChest,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
+                                Index = 360,
                                 Tint = new SharpDX.Color(0, 160, 0, 255),
                             }
                         },
@@ -568,7 +581,7 @@ namespace MapIcons
                             MapIconType = MapIconTypes.SanctumMote,
                             Config = TreeIconConfigs.Chest,
                             DefaultSettings = new MapIconSettings {
-                                Index = 240,
+                                Index = 360,
                                 Tint = new SharpDX.Color(180, 0, 255, 255),
                             }
                         },
@@ -579,26 +592,6 @@ namespace MapIcons
 
         //--| Helper methods |-----------------------------------------------------------------------------------------------
 
-        private void IconPickerButton(string id_name, ref int iconIndex, SharpDX.Color tint) {
-            var tintv4 = new SVector4(tint.R / 255f, tint.G / 255f, tint.B / 255f, tint.A / 255f);
-
-            (SVector2 uv0, SVector2 uv1) = Plugin.IconAtlas.GetIconUVs(iconIndex);
-            //ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4(0.106f, 0.110f, 0.129f, 1f)); 
-            ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4(0.349f, 0.380f, 0.463f, 1.0f));
-            if (ImGui.ImageButton($"##{id_name}", Plugin.IconAtlas.TextureId, new SVector2(16, 16), uv0, uv1, new SVector4(0, 0, 0, 0), tintv4)) {
-                ShowIconPicker = true;
-                SelectedIconButton = id_name;
-            }
-            ImGui.PopStyleColor();
-            if (ImGui.IsItemHovered()) {
-                ImGui.BeginTooltip();
-                ImGui.Text("Pick Icon");
-                ImGui.EndTooltip();
-            }
-            if (ShowIconPicker && SelectedIconButton == id_name) {
-                ShowIconPicker = Plugin.IconAtlas.ShowIconPickerWindow(id_name, ref iconIndex, tintv4);
-            }
-        }
         private static void IconSizeSliderInt(string id, ref int v, int v_min, int v_max) {
             ImGui.PushItemWidth(100);
             ImGui.SliderInt($"##{id}", ref v, v_min, v_max);
@@ -608,26 +601,6 @@ namespace MapIcons
                 ImGui.EndTooltip();
             }
             ImGui.PopItemWidth();
-        }
-        private string[] debugIconStates = { "Off", "All", "Valid", "Invalid" };
-        private bool DebugIconComboBox(string label, ref int selectedItem) {
-            bool itemChanged = false;
-            ImGui.PushItemWidth(80);
-            if (ImGui.BeginCombo(label, debugIconStates[selectedItem])) {
-                for (int i = 0; i < debugIconStates.Length; i++) {
-                    bool isSelected = (selectedItem == i);
-                    if (ImGui.Selectable(debugIconStates[i], isSelected)) {
-                        selectedItem = i;
-                        itemChanged = true;
-                    }
-                    if (isSelected) {
-                        ImGui.SetItemDefaultFocus();
-                    }
-                }
-                ImGui.EndCombo();
-            }
-            ImGui.PopItemWidth();
-            return itemChanged;
         }
         private string[] iconDrawStates = Enum.GetNames(typeof(IconDrawStates));
         private bool IngameIconComboBox(string label, ref IconDrawStates selectedState) {
@@ -657,11 +630,11 @@ namespace MapIcons
                 var setting = Settings.CustomPathIcons[i];
 
                 DT.ImGUITools.Checkbox($"##CustomPath{i}", "Draw Custom Path", ref setting.Draw); ImGui.SameLine();
-                DT.ColorSwatch.Draw($"ICP{i}","Icon Color", ref setting.Tint); ImGui.SameLine();
-                DT.ColorSwatch.Draw($"IHCP{i}","Icon Hidden Color", ref setting.HiddenTint); ImGui.SameLine();
-                IconPickerButton($"Custom Path Icon {i}", ref setting.Index, setting.Tint); ImGui.SameLine();
+                DT.ColorSelect.Draw($"ICP{i}","Icon Color", ref setting.Tint); ImGui.SameLine();
+                DT.ColorSelect.Draw($"IHCP{i}","Icon Hidden Color", ref setting.HiddenTint); ImGui.SameLine();
+                DT.IconSelect.Draw($"CustomPathIcon{i}", "Custom Path Icon", ref setting.Index, Plugin.IconAtlas, new DT.IconSelect.Options { IconColor = setting.Tint.ToImgui() }); ImGui.SameLine();
                 IconSizeSliderInt($"##CustomPath{i}", ref setting.Size, 0, 32); ImGui.SameLine();
-                DT.ImGUITools.Checkbox($"##CustomPathText{i}", "Draw Text", ref setting.DrawText); ImGui.SameLine();
+                DT.ImGUITools.Checkbox($"##CustomPathText{i}", "Draw Text", ref setting.DrawName); ImGui.SameLine();
                 DT.ImGUITools.Checkbox($"##CustomPathAlive{i}", "Check if Entity is Alive", ref setting.Check_IsAlive); ImGui.SameLine();
                 DT.ImGUITools.Checkbox($"##CustomPathOpened{i}", "Check if Entity is Opened", ref setting.Check_IsOpened); ImGui.SameLine();
                 float inputTextWidth = ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize("Remove").X - ImGui.GetStyle().ItemSpacing.X;
@@ -691,29 +664,41 @@ namespace MapIcons
                         switch (treeIcon.Config) {
                             case TreeIconConfigs.Default:
                                 DT.ImGUITools.Checkbox($"##Draw_{treeIcon.Name}", $"Draw {treeIcon.Name}", ref iconSettings.Draw); ImGui.SameLine();
-                                DT.ColorSwatch.Draw($"IC{treeIcon.Name}", $"{treeIcon.Name}", ref iconSettings.Tint); ImGui.SameLine();
-                                DT.ColorSwatch.Draw($"IHC{treeIcon.Name}", $"{treeIcon.Name} Hidden", ref iconSettings.HiddenTint); ImGui.SameLine();
-                                IconPickerButton($"Icon {treeIcon.Name}", ref iconSettings.Index, iconSettings.Tint); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IC{treeIcon.Name}", $"Icon Color", ref iconSettings.Tint); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IHC{treeIcon.Name}", $"Icon Hidden Color", ref iconSettings.HiddenTint); ImGui.SameLine();
+                                DT.IconSelect.Draw($"Icon{treeIcon.Name}", $"Icon", ref iconSettings.Index, Plugin.IconAtlas, new DT.IconSelect.Options { IconColor = iconSettings.Tint.ToImgui() }); ImGui.SameLine();
                                 IconSizeSliderInt($"Icons Slider {treeIcon.Name}", ref iconSettings.Size, 0, 32); ImGui.SameLine();
                                 ImGui.Text($"{treeIcon.Name}");
                                 break;
                             case TreeIconConfigs.IngameIcon:
                                 IngameIconComboBox($"##{treeIcon.Name}", ref iconSettings.DrawState); ImGui.SameLine();
-                                DT.ImGUITools.Checkbox($"##checkbox{treeIcon.Name}", $"Show {treeIcon.Name} Name", ref iconSettings.DrawText); ImGui.SameLine();
+                                DT.ImGUITools.Checkbox($"##checkbox{treeIcon.Name}", $"Show {treeIcon.Name} Name", ref iconSettings.DrawName); ImGui.SameLine();
                                 ImGui.Text($"{treeIcon.Name}");
                                 break;
                             case TreeIconConfigs.Monster:
                                 DT.ImGUITools.Checkbox($"##Draw_{treeIcon.Name}", $"Draw {treeIcon.Name}", ref iconSettings.Draw); ImGui.SameLine();
-                                DT.ColorSwatch.Draw($"IC{treeIcon.Name}", $"{treeIcon.Name}", ref iconSettings.Tint); ImGui.SameLine();
-                                DT.ColorSwatch.Draw($"IHC{treeIcon.Name}", $"{treeIcon.Name} Hidden", ref iconSettings.HiddenTint); ImGui.SameLine();
-                                IconPickerButton($"Icon {treeIcon.Name}", ref iconSettings.Index, iconSettings.Tint); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IC{treeIcon.Name}", $"Icon Color", ref iconSettings.Tint); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IHC{treeIcon.Name}", $"Icon Hidden Color", ref iconSettings.HiddenTint); ImGui.SameLine();
+                                DT.IconSelect.Draw($"Icon{treeIcon.Name}", $"Icon", ref iconSettings.Index, Plugin.IconAtlas, new DT.IconSelect.Options { IconColor = iconSettings.Tint.ToImgui() }); ImGui.SameLine();
+                                DT.ImGUITools.Checkbox($"##Animate_{treeIcon.Name}", $"Animate Icon Health, uses 8 sequential icons to visualise health", ref iconSettings.AnimateLife); ImGui.SameLine();
                                 IconSizeSliderInt($"Icons Slider {treeIcon.Name}", ref iconSettings.Size, 0, 32); ImGui.SameLine();
+                                ImGui.Text(treeIcon.Name);
+                                break;
+                            case TreeIconConfigs.Friendly:
+                                DT.ImGUITools.Checkbox($"##Draw_{treeIcon.Name}", $"Draw {treeIcon.Name}", ref iconSettings.Draw); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IC{treeIcon.Name}", $"Icon Color", ref iconSettings.Tint); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IHC{treeIcon.Name}", $"Icon Hidden Color", ref iconSettings.HiddenTint); ImGui.SameLine();
+                                DT.IconSelect.Draw($"Icon{treeIcon.Name}", $"Icon", ref iconSettings.Index, Plugin.IconAtlas, new DT.IconSelect.Options { IconColor = iconSettings.Tint.ToImgui() }); ImGui.SameLine();
+                                DT.ImGUITools.Checkbox($"##Animate_{treeIcon.Name}", $"Animate Icon Health, uses 8 sequential icons to visualise health", ref iconSettings.AnimateLife); ImGui.SameLine();
+                                IconSizeSliderInt($"Icons Slider {treeIcon.Name}", ref iconSettings.Size, 0, 32); ImGui.SameLine();
+                                DT.ImGUITools.Checkbox($"##checkboxname{treeIcon.Name}", $"Show Name", ref iconSettings.DrawName); ImGui.SameLine();
+                                DT.ImGUITools.Checkbox($"##checkboxhealth{treeIcon.Name}", $"Show Health", ref iconSettings.DrawHealth); ImGui.SameLine();
                                 ImGui.Text(treeIcon.Name);
                                 break;
                             case TreeIconConfigs.Chest:
                                 DT.ImGUITools.Checkbox($"##Draw_{treeIcon.Name}", $"Draw {treeIcon.Name}", ref iconSettings.Draw); ImGui.SameLine();
-                                DT.ColorSwatch.Draw($"IC{treeIcon.Name}",$"{treeIcon.Name}", ref iconSettings.Tint); ImGui.SameLine();
-                                IconPickerButton($"Icon {treeIcon.Name}", ref iconSettings.Index, iconSettings.Tint); ImGui.SameLine();
+                                DT.ColorSelect.Draw($"IC{treeIcon.Name}",$"Icon Color", ref iconSettings.Tint); ImGui.SameLine();
+                                DT.IconSelect.Draw($"Icon{treeIcon.Name}", $"Icon", ref iconSettings.Index, Plugin.IconAtlas, new DT.IconSelect.Options { IconColor = iconSettings.Tint.ToImgui() }); ImGui.SameLine();
                                 IconSizeSliderInt($"Icons Slider {treeIcon.Name}", ref iconSettings.Size, 0, 32); ImGui.SameLine();
                                 ImGui.Text(treeIcon.Name);
                                 break;
@@ -746,13 +731,12 @@ namespace MapIcons
             }
             ImGui.SameLine();
             ImGui.PopItemWidth(); // Reset slider width
-            ImGui.Checkbox("Debug", ref Settings.Debug);
-            if (ImGui.IsItemHovered()) {
-                ImGui.SetTooltip("When enabled, any changes made to icons through the UI\n"
-                                 + "will be immediately reflected in the rendered icons\n"
-                                 + "without needing to rebuild.\n"
-                                 + "Disable this after setup to improve performance.");
-            }
+            DT.Button.Draw("ShowDBugger", ref Settings.DBuggerSettings.ShowToolbar, new DT.Button.Options {
+                Label = "DBugger",
+                Width = 120,
+                Height = 22,
+            });
+            
             if (DT.ImGUITools.CollapsingHeader("Draw Settings", ref Settings.DrawSettingsOpen)) {
                 ImGui.Indent();
                 DT.ImGUITools.Checkbox("Draw on Minimap", "Draw Monsters on the minimap", ref Settings.DrawOnMinimap);
